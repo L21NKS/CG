@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+
 def bresenham_circle(radius):
     x = 0
     y = radius
@@ -24,7 +25,8 @@ def bresenham_circle(radius):
 
     return points
 
-def plot_circle_with_ticks(radius, num_ticks, hour, minute):
+
+def plot_circle_with_ticks_and_hands(radius, num_ticks, hour, minute):
     points = bresenham_circle(radius)
     
     unique_points = list(set(points))
@@ -38,6 +40,7 @@ def plot_circle_with_ticks(radius, num_ticks, hour, minute):
     fig, ax = plt.subplots()
     ax.plot(x_coords, y_coords, color='blue')
 
+
     tick_length = 0.1 * radius
     for i in range(num_ticks):
         angle = 2 * np.pi * i / num_ticks
@@ -48,28 +51,28 @@ def plot_circle_with_ticks(radius, num_ticks, hour, minute):
         
         ax.plot([x_tick_start, x_tick_end], [y_tick_start, y_tick_end], color='red', lw=1.5)
 
-    minute_angle = np.deg2rad(360 - minute * 6 + 90)  
-    hour_angle = np.deg2rad(360 - ((hour % 12) * 30 + minute * 0.5) + 90)  
 
-    ax.arrow(0, 0, 0.5 * radius * np.cos(hour_angle),
-             0.5 * radius * np.sin(hour_angle), 
-            head_width=0.05 * radius, head_length=0.1 * radius, fc='green', ec='green')
+    minute_angle = np.deg2rad(360 - minute * 6 + 90)  # Угол минутной стрелки
+    hour_angle = np.deg2rad(360 - ((hour % 12) * 30 + minute * 0.5) + 90)  # Угол часовой стрелки
 
-    ax.arrow(0, 0, 0.8 * radius * np.cos(minute_angle),
-             0.8 * radius * np.sin(minute_angle), 
-            head_width=0.05 * radius, head_length=0.1 * radius, fc='blue', ec='blue')
 
+    x_hour = 0.5 * radius * np.cos(hour_angle)  # Длина часовой стрелки 50% радиуса
+    y_hour = 0.5 * radius * np.sin(hour_angle)
+    x_minute = 0.8 * radius * np.cos(minute_angle)  # Длина минутной стрелки 80% радиуса
+    y_minute = 0.8 * radius * np.sin(minute_angle)
+
+    ax.arrow(0, 0, x_hour, y_hour, head_width=0.05 * radius, head_length=0.1 * radius, fc='green', ec='green', lw=2)
+
+    
+    ax.arrow(0, 0, x_minute, y_minute, head_width=0.05 * radius, head_length=0.1 * radius, fc='blue', ec='blue', lw=2)
     ax.set_aspect('equal', adjustable='box')
-    ax.set_title(f'Bresenham Circle with radius {radius} and {num_ticks} ticks')
+    ax.set_title(f'Bresenham Circle with {num_ticks} ticks and hands')
     ax.grid(True)
     plt.show()
 
-# Ввод данных от пользователя
 radius = int(input("Введите радиус циферблата: "))
 num_ticks = 12
 hour = int(input("Часы (0-23): "))
 minute = int(input("Минуты (0-59): "))
 
-# Отображение часов
-plot_circle_with_ticks(radius, num_ticks, hour, minute)
-
+plot_circle_with_ticks_and_hands(radius, num_ticks, hour, minute)
